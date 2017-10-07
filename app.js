@@ -17,6 +17,7 @@ app.use(require('body-parser').json());
 app.get('/', (req, res, next)=> res.sendFile(path.join(__dirname, 'index.html')));
 
 const User = require('./db').models.User;
+const Order = require('./db').models.Order;
 
 app.get('/api/session', (req, res, next)=> {
   if(!req.session.userId){
@@ -42,4 +43,13 @@ app.post('/api/session', (req, res, next)=> {
 app.delete('/api/session', (req, res, next)=> {
   req.session.destroy();
   res.sendStatus(204);
+});
+
+app.get('/api/orders/:filter', (req, res, next)=> {
+  const filter = JSON.parse(req.params.filter);
+  if(filter.where && filter.where.status && filter.where.status === 'CART' && filter.where.userId){
+    Order.getCartForUser(filter.where.userId)
+      .then( cart => res.send(cart))
+      .catch(next);
+  }
 });
