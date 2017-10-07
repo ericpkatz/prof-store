@@ -13,7 +13,7 @@ const seed = ()=> {
     return {
       name, 
       email: `${name}@${name}.com`,
-      password: `{name}123`
+      password: `${name}123`
     }
   });
   return Promise.all(users.map( user => User.create(user)))

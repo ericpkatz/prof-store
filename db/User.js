@@ -16,4 +16,26 @@ const User = conn.define('user', {
   }
 });
 
+User.authenticate = (credentials)=> {
+  return User.findOne({
+    where: credentials
+  })
+  .then( user => {
+    if(!user){
+      throw new Error('BAD CREDENTIALS')
+    }
+    return user;
+  });
+};
+
+User.findOrThrow = (id)=> {
+  return User.findById(id)
+  .then( user => {
+    if(!user){
+      throw new Error('BAD CREDENTIALS')
+    }
+    return user;
+  });
+};
+
 module.exports = User;
