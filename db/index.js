@@ -7,6 +7,7 @@ const Product = require('./Product');
 
 Order.belongsTo(User);
 Order.hasMany(LineItem);
+LineItem.belongsTo(Product);
 
 const sync = ()=> {
   return conn.sync({ force: true });
@@ -24,9 +25,10 @@ const seed = ()=> {
     }
   });
 
-  const products = productNames.map( name => {
+  const products = productNames.map( (name, idx) => {
     return {
-      name 
+      name,
+      price: idx
     }
   });
 

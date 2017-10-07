@@ -18,6 +18,7 @@ app.get('/', (req, res, next)=> res.sendFile(path.join(__dirname, 'index.html'))
 
 const User = require('./db').models.User;
 const Order = require('./db').models.Order;
+const LineItem = require('./db').models.LineItem;
 
 app.get('/api/session', (req, res, next)=> {
   if(!req.session.userId){
@@ -52,4 +53,26 @@ app.get('/api/orders/:filter', (req, res, next)=> {
       .then( cart => res.send(cart))
       .catch(next);
   }
+});
+
+app.post('/api/orders/:id/lineItems', (req, res, next)=> {
+  const filter = {
+    orderId: req.params.id,
+    productId: req.body.productId
+  };
+  LineItem.findOne({
+    where: filter 
+  })
+  .then( lineItem => {
+    if(lineItem){
+      lineItem.quantity++;
+    }
+    else {
+      lineItem = LineItem.build(filter);
+    }
+    lineItem.price = req.body.price
+    return lineItem.save();
+  })
+  .then( lineItem => res.send(lineItem))
+  .catch(next);
 });

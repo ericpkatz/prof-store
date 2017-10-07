@@ -5,6 +5,10 @@ const Product = conn.define('product', {
   name: {
     type: Sequelize.STRING,
     unique: true
+  },
+  price: {
+    type: Sequelize.DECIMAL,
+    allowNull: false
   }
 });
 

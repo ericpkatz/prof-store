@@ -85,6 +85,45 @@ describe('session routes', ()=> {
           expect(result.status).to.equal(200);
           expect(result.body.userId).to.equal(moe.id);
           expect(result.body.lineItems.length).to.equal(0);
+          return app.post(`/api/orders/${result.body.id}/lineItems`)
+            .send({
+              productId: bar.id,
+              price: bar.price
+            })
+        })
+        .then( result => {
+          expect(result.status).to.equal(200);
+          const filter = {
+            where: {
+              userId: moe.id,
+              status: 'CART'
+            }
+          };
+          return app.get(`/api/orders/${JSON.stringify(filter)}`);
+        })
+        .then( result => {
+          expect(result.body.lineItems.length).to.equal(1);
+          expect(result.body.lineItems[0].productId).to.equal(bar.id);
+          return app.post(`/api/orders/${result.body.id}/lineItems`)
+            .send({
+              productId: bar.id,
+              price: bar.price
+            })
+        })
+        .then( result => {
+          const filter = {
+            where: {
+              userId: moe.id,
+              status: 'CART'
+            }
+          };
+          return app.get(`/api/orders/${JSON.stringify(filter)}`);
+        })
+        .then( result => {
+          expect(result.body.lineItems.length).to.equal(1);
+          expect(result.body.lineItems[0].quantity).to.equal(2);
+        })
+        .then( result => {
           return app.delete('/api/session');
         })
         .then( result => {
