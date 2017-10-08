@@ -3,7 +3,7 @@ const supertest = require('supertest');
 const app = supertest.agent(require('../../app'));
 const db = require('../../db');
 
-describe('session routes', ()=> {
+describe('routes', ()=> {
   let seeded, moe, bar, foo;
   beforeEach(()=> {
     return db.sync()
@@ -16,6 +16,7 @@ describe('session routes', ()=> {
       });
       
   });
+
   describe('data', ()=> {
     it('moe is there', ()=> {
       return expect(moe.email).to.equal('moe@moe.com');
@@ -29,6 +30,16 @@ describe('session routes', ()=> {
     it('returns a 401', ()=> {
       return app.get('/api/session')
         .expect(401);
+    });
+  });
+
+  describe('loading products', ()=> {
+    it('there are products', ()=> {
+      return app.get('/api/products')
+        .expect(200)
+        .then( result => {
+          expect(result.body.length).to.equal(3);
+        });
     });
   });
 

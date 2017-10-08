@@ -66,6 +66,7 @@ module.exports = {
   sync,
   seed,
   models: {
+    Product,
     User,
     Order,
     LineItem

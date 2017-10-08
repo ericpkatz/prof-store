@@ -16,9 +16,24 @@ app.use(require('body-parser').json());
 
 app.get('/', (req, res, next)=> res.sendFile(path.join(__dirname, 'index.html')));
 
-const User = require('./db').models.User;
-const Order = require('./db').models.Order;
-const LineItem = require('./db').models.LineItem;
+const models = require('./db').models; 
+
+const { User, Product, Order, LineItem}  =  models;
+
+app.get('/api/products', (req, res, next)=> {
+  Product.findAll()
+    .then( products => res.send(products))
+    .catch(next);
+});
+
+app.post('/api/users', (req, res, next)=> {
+  User.create(req.body)
+    .then( user => {
+      req.session.userId = user.id;
+      res.send(user);
+    })
+    .catch(next);
+});
 
 app.get('/api/session', (req, res, next)=> {
   if(!req.session.userId){
@@ -30,15 +45,6 @@ app.get('/api/session', (req, res, next)=> {
       delete req.session.userId;
       return res.sendStatus(401);
     });
-});
-
-app.post('/api/users', (req, res, next)=> {
-  User.create(req.body)
-    .then( user => {
-      req.session.userId = user.id;
-      res.send(user);
-    })
-    .catch(next);
 });
 
 app.post('/api/session', (req, res, next)=> {
