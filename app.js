@@ -16,6 +16,8 @@ app.use(require('body-parser').json());
 
 app.get('/', (req, res, next)=> res.sendFile(path.join(__dirname, 'index.html')));
 
+//TODO pull routes out
+
 const models = require('./db').models; 
 
 const { User, Product, Order, LineItem}  =  models;

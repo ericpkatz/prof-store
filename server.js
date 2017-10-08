@@ -3,6 +3,6 @@ const db = require('./db');
 
 db.sync()
   .then(()=> db.seed())
-  .then( seeded => console.log(seeded.moe.email));
+  .then( seeded => console.log(seeded.users.moe.email));
 
 app.listen(process.env.PORT || 3000);
