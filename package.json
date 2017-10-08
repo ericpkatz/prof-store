@@ -9,6 +9,8 @@
     "test:dev": "npm run test:dev:server",
     "test:dev:server": "DATABASE_URL=postgres://localhost/my_db_test nodemon ./node_modules/mocha/bin/mocha --recursive test/server/**/*.js",
     "test:dev:client": "nodemon ./node_modules/mocha/bin/mocha --recursive --compilers js:babel-register test/client/**/*.js",
+    "test:server": "DATABASE_URL=postgres://localhost/circle_test node ./node_modules/mocha/bin/mocha --recursive test/server/**/*.js",
+    "test": "npm run test:server",
     "start:dev": "npm run webpack -- -w & nodemon --ignore src/ --ignore dist/ server.js"
   },
   "keywords": [],
