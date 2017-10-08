@@ -24,10 +24,37 @@ describe('session routes', ()=> {
       return expect(bar.name).to.equal('bar');
     });
   });
+
   describe('user is not logged in', ()=> {
     it('returns a 401', ()=> {
       return app.get('/api/session')
         .expect(401);
+    });
+  });
+
+  describe('the registration process', ()=> {
+    it('allows user to register', ()=> {
+      const credentials = {
+        email: 'shep',
+        password: 'shep123'
+      };
+      return app.post('/api/users')
+        .send(credentials) 
+        .expect(200)
+        .then( result => {
+          expect(result.body.createdAt).to.be.ok;
+          return app.get('/api/session');
+        })
+        .then( result => {
+          expect(result.status).to.equal(200);
+          return app.delete('/api/session');
+        })
+        .then( result => {
+          return app.get('/api/session');
+        })
+        .then( result => {
+          expect(result.status).to.equal(401);
+        })
     });
   });
 

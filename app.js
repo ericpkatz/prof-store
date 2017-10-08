@@ -32,6 +32,15 @@ app.get('/api/session', (req, res, next)=> {
     });
 });
 
+app.post('/api/users', (req, res, next)=> {
+  User.create(req.body)
+    .then( user => {
+      req.session.userId = user.id;
+      res.send(user);
+    })
+    .catch(next);
+});
+
 app.post('/api/session', (req, res, next)=> {
   User.authenticate(req.body)
     .then( user => {
@@ -55,7 +64,6 @@ app.get('/api/orders/:filter', (req, res, next)=> {
   }
 });
 
-//to do DELETE lineItem and create order
 app.delete('/api/orders/:orderId/lineItems/:id', (req, res, next)=> {
   LineItem.destroy({
     where: {
