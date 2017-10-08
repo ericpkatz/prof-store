@@ -6,6 +6,7 @@ const LineItem = require('./LineItem');
 const Product = require('./Product');
 
 Order.belongsTo(User);
+User.hasMany(Order);
 Order.hasMany(LineItem);
 LineItem.belongsTo(Product);
 

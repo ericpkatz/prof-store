@@ -55,6 +55,30 @@ app.get('/api/orders/:filter', (req, res, next)=> {
   }
 });
 
+//to do DELETE lineItem and create order
+app.delete('/api/orders/:orderId/lineItems/:id', (req, res, next)=> {
+  LineItem.destroy({
+    where: {
+      orderId: req.params.orderId,
+      id: req.params.id
+    }
+  })
+  .then(()=> {
+    res.sendStatus(204);
+  })
+  .catch(next);
+});
+
+app.put('/api/orders/:id', (req, res, next)=> {
+  Order.findById(req.params.id)
+    .then( order => {
+      Object.assign(order, req.body);
+      return order.save();
+    })
+    .then( order => res.send(order))
+    .catch(next);
+});
+
 app.post('/api/orders/:id/lineItems', (req, res, next)=> {
   const filter = {
     orderId: req.params.id,

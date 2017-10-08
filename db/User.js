@@ -18,7 +18,7 @@ const User = conn.define('user', {
 
 User.authenticate = (credentials)=> {
   return User.findOne({
-    where: credentials
+    where: credentials,
   })
   .then( user => {
     if(!user){
@@ -29,7 +29,22 @@ User.authenticate = (credentials)=> {
 };
 
 User.findOrThrow = (id)=> {
-  return User.findById(id)
+  return User.findById(id,
+    {
+      include: [
+        {
+          model: conn.models.order,
+          where: {
+            status: 'ORDER'
+          },
+          required: false,
+          include: [
+            conn.models.lineItem
+          ]
+        }
+      ]
+    }
+  )
   .then( user => {
     if(!user){
       throw new Error('BAD CREDENTIALS')

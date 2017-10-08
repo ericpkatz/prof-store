@@ -4,7 +4,7 @@ const app = supertest.agent(require('../../app'));
 const db = require('../../db');
 
 describe('session routes', ()=> {
-  let seeded, moe, bar;
+  let seeded, moe, bar, foo;
   beforeEach(()=> {
     return db.sync()
       .then(()=> db.seed())
@@ -12,6 +12,7 @@ describe('session routes', ()=> {
         seeded = _seeded; 
         moe = seeded.users.moe;
         bar = seeded.products.bar;
+        foo = seeded.products.foo;
       });
       
   });
@@ -58,6 +59,7 @@ describe('session routes', ()=> {
   });
 
   describe('ordering', ()=> {
+    let cart;
     it('a user can create an order', ()=> {
       const { email, password } = moe;
       const credentials = {
@@ -82,6 +84,7 @@ describe('session routes', ()=> {
           return app.get(`/api/orders/${JSON.stringify(filter)}`);
         })
         .then( result => {
+          cart = result.body;
           expect(result.status).to.equal(200);
           expect(result.body.userId).to.equal(moe.id);
           expect(result.body.lineItems.length).to.equal(0);
@@ -120,8 +123,54 @@ describe('session routes', ()=> {
           return app.get(`/api/orders/${JSON.stringify(filter)}`);
         })
         .then( result => {
+          const lineItem = result.body.lineItems[0];
           expect(result.body.lineItems.length).to.equal(1);
           expect(result.body.lineItems[0].quantity).to.equal(2);
+          
+          return app.delete(`/api/orders/${lineItem.orderId}/lineItems/${lineItem.id}`);
+        })
+        .then( result => {
+          expect(result.status).to.equal(204);
+          const filter = {
+            where: {
+              userId: moe.id,
+              status: 'CART'
+            }
+          };
+          return app.get(`/api/orders/${JSON.stringify(filter)}`);
+        })
+        .then((result)=> {
+          expect(result.body.lineItems.length).to.equal(0);
+          return app.post(`/api/orders/${cart.id}/lineItems`)
+            .send({
+              productId: foo.id,
+              price: foo.price
+            })
+        })
+        .then( result => {
+          return app.put(`/api/orders/${cart.id}`)
+            .send({
+              status: 'ORDER'
+            })
+        })
+        .then( result => {
+          expect(result.status).to.equal(200);
+          const filter = {
+            where: {
+              userId: moe.id,
+              status: 'CART'
+            }
+          };
+          return app.get(`/api/orders/${JSON.stringify(filter)}`);
+        })
+        .then( result => {
+          expect(result.body.id).not.to.equal(cart.id)
+          return app.get('/api/session');
+        })
+        .then( result => {
+          expect(result.body.orders.length).to.equal(1);
+          expect(result.body.orders[0].lineItems.length).to.equal(1);
+          expect(result.body.orders[0].lineItems[0].productId).to.equal(foo.id);
         })
         .then( result => {
           return app.delete('/api/session');
