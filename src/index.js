@@ -1,7 +1,16 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import { render } from 'react-dom';
+import { Provider, connect } from 'react-redux';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import store from './redux';
 
-import Home from './Home';
+import Routes from './routes';
 
-ReactDOM.render(<Home />, document.getElementById('root'));
+const App = () => (
+  <Provider store={ store }>
+    <Routes />
+  </Provider>
+);
+
+
+render(<App />, document.getElementById('root'));
