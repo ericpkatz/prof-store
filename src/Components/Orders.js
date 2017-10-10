@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { actions } from '../redux';
+const { addToCart } = actions;
 
-const Orders = ({ orders })=> {
+const Orders = ({ orders, addToCart, cart, user })=> {
   return (
     <ul className='list-group'>
       {
@@ -23,6 +24,8 @@ const Orders = ({ orders })=> {
                         <br />
                         Product: { lineItem.product.name }
                         <br />
+                        <button className='btn btn-primary' onClick={ ()=> addToCart({ user, product: lineItem.product, cart })}>Buy Again</button>
+                        <br />
                         Quanity: { lineItem.quantity }
                       </li>
                     );
@@ -39,10 +42,11 @@ const Orders = ({ orders })=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return {
+    addToCart: ({ user, cart, product })=> dispatch(addToCart({ user, cart, product }))
   };
 };
 
-const mapStateToProps = ({ user, products })=> {
+const mapStateToProps = ({ user, products, cart })=> {
   if(user.orders){
     const productMap = products.reduce((memo, product)=> {
       memo[product.id] = product;
@@ -65,7 +69,9 @@ const mapStateToProps = ({ user, products })=> {
     user = Object.assign({}, user, { orders });
   }
   return {
-    orders: user.id ? user.orders : []
+    orders: user.id ? user.orders : [],
+    user,
+    cart
   };
 };
 
