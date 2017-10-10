@@ -13,7 +13,7 @@ const Products = ({ products, user, cart, addToCart, isLoggedIn })=> {
               { product.name }
               {
                 isLoggedIn && (
-                  <button className='pull-right' onClick={ ()=> addToCart({ user, product, cart })}> Add to Cart</button>
+                  <button className='pull-right btn btn-primary' onClick={ ()=> addToCart({ user, product, cart })}> Add to Cart</button>
                 )
               }
               <br style={ { clear: 'both' }} />

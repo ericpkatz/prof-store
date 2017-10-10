@@ -79,6 +79,15 @@ const addToCart = ({ user, product, cart })=> {
   };
 };
 
+const deleteFromCart = ({ user, lineItem, cart })=> {
+  
+  return (dispatch)=> {
+    return axios.delete(`/api/orders/${cart.id}/lineItems/${lineItem.id}`)
+      .then(response => dispatch(loadCart(user.id)))
+      .catch( ex => console.log('user not logged in'))
+  };
+};
+
 const createOrder = ({ user, cart, history })=> {
   return (dispatch)=> {
     return axios.put(`/api/orders/${cart.id}/`, { status: 'ORDER' })
@@ -93,7 +102,10 @@ const createOrder = ({ user, cart, history })=> {
 const logout = (history)=> {
   return (dispatch)=> {
     return axios.delete('/api/session')
-      .then(response => dispatch(loggedOut()));
+      .then(response => {
+        dispatch(loggedOut())
+        history.push('/');
+      });
   };
 };
 
@@ -133,6 +145,7 @@ const loggedOut = ()=> {
 
 const actions = {
   addToCart,
+  deleteFromCart,
   fetchProducts,
   fetchUser,
   attemptLogin,

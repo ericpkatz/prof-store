@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { actions } from '../redux';
 const { attemptLogin, logout } = actions;
 
-const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderCount })=> {
+const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderCount, user })=> {
   const signIn = (ev)=> {
     ev.preventDefault();
     const credentials = {
@@ -47,7 +47,9 @@ const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderC
       </ul>
       {
         isLoggedIn && (
-          <button className='btn btn-warning' onClick={ logout }>Sign out</button>
+          <div className='well'>
+            <button className='btn btn-warning' onClick={ logout }>Sign out { user.email }</button>
+          </div>
         )
       }
       {
@@ -58,7 +60,7 @@ const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderC
             <input type="text" className="form-control" name="email" placeholder='email' />
           </div>
           <div className="form-group">
-              <input type="text" className="form-control" name="password" placeholder="Password" />
+              <input type="password" className="form-control" name="password" placeholder="Password" />
           </div>
           <button type="submit" className="btn btn-default">Sign In</button>
       </form>
@@ -70,6 +72,7 @@ const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderC
 
 const mapStateToProps = ({ user, products, cart })=> {
   return {
+    user,
     isLoggedIn: !!user.id,
     productCount: products.length,
     cartCount: cart.lineItems.reduce((memo, lineItem)=> {
