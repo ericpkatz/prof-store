@@ -7,6 +7,9 @@ import { actions } from './redux';
 const { fetchProducts, fetchUser } = actions;
 
 import Home from './Components/Home';
+import Products from './Components/Products';
+import Orders from './Components/Orders';
+import Cart from './Components/Cart';
 import Nav from './Components/Nav';
 
 class Routes extends Component {
@@ -21,7 +24,10 @@ class Routes extends Component {
       <Router>
         <div className='container'>
           <Route component={ Nav } />
-          <Route path='/' component={ Home } />
+          <Route exact path='/' component={ Home } />
+          <Route path='/products' component={ Products } />
+          <Route exact path='/cart' component={ Cart } />
+          <Route exact path='/orders' component={ Orders } />
         </div>
       </Router>
     );

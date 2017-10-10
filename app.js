@@ -18,6 +18,8 @@ app.use(require('body-parser').json());
 [
   '/',
   '/products',
+  '/cart',
+  '/orders'
 ].map( url => app.get(url, (req, res, next)=> res.sendFile(path.join(__dirname, 'index.html'))))
 
 //TODO pull routes out

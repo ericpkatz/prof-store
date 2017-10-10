@@ -23,7 +23,7 @@ User.authenticate = (credentials)=> {
     if(!user){
       throw new Error('BAD CREDENTIALS')
     }
-    return user;
+    return User.findOrThrow(user.id);
   });
 };
 
