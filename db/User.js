@@ -30,6 +30,9 @@ User.authenticate = (credentials)=> {
 User.findOrThrow = (id)=> {
   return User.findById(id,
     {
+      attributes: {
+        exclude: ['password']
+      },
       include: [
         {
           model: conn.models.order,

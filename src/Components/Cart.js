@@ -32,7 +32,11 @@ const Cart = ({ cart, user, createOrder, deleteFromCart })=> {
       </ul>
       {
         cart.lineItems.length ? (
+          <div>
+            <br />
           <button className='pull-right btn btn-primary' onClick={ ()=> createOrder({ cart, user })}> Create Order</button>
+            <br style={ { clear: 'both' }} />
+            </div>
         ): (null)
       }
       </div>

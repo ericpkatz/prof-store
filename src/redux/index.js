@@ -103,7 +103,8 @@ const logout = (history)=> {
   return (dispatch)=> {
     return axios.delete('/api/session')
       .then(response => {
-        dispatch(loggedOut())
+        dispatch(loggedOut());
+        dispatch(cartLoaded({lineItems: []}));
         history.push('/');
       });
   };
