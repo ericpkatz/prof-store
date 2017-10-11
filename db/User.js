@@ -27,6 +27,19 @@ User.authenticate = (credentials)=> {
   });
 };
 
+User.findBySession = function(session){
+  if(!session.userId){
+    const error = new Error('USER NOT IN SESSION');
+    error.status = 401;
+    throw error;
+  }
+  return User.findOrThrow(session.userId)
+    .catch( er => {
+      delete session.userId;
+      throw er
+    });
+};
+
 User.findOrThrow = (id)=> {
   return User.findById(id,
     {
