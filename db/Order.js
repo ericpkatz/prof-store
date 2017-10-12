@@ -38,6 +38,11 @@ Order.createLineItem = function(session, productId, quantity){
 };
 
 Order.getCartForUser = function(session){
+  if(!session.userId){
+    const error = new Error('USER NOT IN SESSION');
+    error.status = 401;
+    throw error;
+  }
   return this.findOne({
     where: {
       userId: session.userId,

@@ -11,11 +11,7 @@ const Products = ({ products, user, cart, addToCart, isLoggedIn })=> {
           return (
             <li className='list-group-item' key={ product.id }>
               { product.name }
-              {
-                isLoggedIn && (
-                  <button className='pull-right btn btn-primary' onClick={ ()=> addToCart({ user, product, cart })}> Add to Cart</button>
-                )
-              }
+              <button className='pull-right btn btn-primary' onClick={ ()=> addToCart({ user, product, cart })}> Add to Cart</button>
               <br style={ { clear: 'both' }} />
             </li>
           )

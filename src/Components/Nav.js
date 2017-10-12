@@ -4,14 +4,14 @@ import { Link } from 'react-router-dom';
 import { mappers } from '../redux';
 const { navDispatchMapper, navStateMapper } = mappers;
 
-const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderCount, user })=> {
+const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderCount, user, cart })=> {
   const signIn = (ev)=> {
     ev.preventDefault();
     const credentials = {
       email: ev.target.email.value,
       password: ev.target.password.value
     };
-    attemptLogin(credentials);
+    attemptLogin(credentials, cart);
   }
   return (
     <div>
@@ -26,15 +26,11 @@ const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderC
             Products ({ productCount })
           </Link>
         </li>
-      {
-        isLoggedIn && (
-          <li>
-            <Link to='/cart'>
-              Cart ({ cartCount })
-            </Link>
-          </li>
-        )
-      }
+        <li>
+          <Link to='/cart'>
+            Cart ({ cartCount })
+          </Link>
+        </li>
       {
         isLoggedIn && (
           <li>

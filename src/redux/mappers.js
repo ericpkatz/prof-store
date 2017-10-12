@@ -78,6 +78,7 @@ const navStateMapper = ({ user, products, cart })=> {
     user,
     isLoggedIn: !!user.id,
     productCount: products.length,
+    cart: cart,
     cartCount: cart.lineItems.reduce((memo, lineItem)=> {
       memo += lineItem.quantity;
       return memo;
@@ -91,8 +92,8 @@ const navDispatchMapper = (dispatch, { history })=> {
     logout: ()=> {
       dispatch(logout(history));
     },
-    attemptLogin: ( credentials )=> {
-      dispatch(attemptLogin(credentials, history));
+    attemptLogin: ( credentials, cart )=> {
+      dispatch(attemptLogin(credentials, cart, history));
     }
   };
 }
