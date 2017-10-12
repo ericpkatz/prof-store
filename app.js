@@ -25,6 +25,7 @@ app.use(require('body-parser').json());
 app.use('/api', require('./api'));
 
 app.use((err, req, res, next)=> {
+  console.log(err);
   res.status(err.status || 500).send({ message: err.message });
 });
 

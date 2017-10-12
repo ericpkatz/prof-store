@@ -113,13 +113,7 @@ describe('routes', ()=> {
         })
         .then( result => {
           expect(result.status).to.equal(200);
-          const filter = {
-            where: {
-              userId: result.body.id,
-              status: 'CART'
-            }
-          };
-          return app.get(`/api/orders/${JSON.stringify(filter)}`);
+          return app.get('/api/cart');
         })
         .then( result => {
           cart = result.body;
@@ -129,22 +123,18 @@ describe('routes', ()=> {
           return app.post(`/api/orders/${result.body.id}/lineItems`)
             .send({
               productId: bar.id,
-              price: bar.price
+              price: bar.price,
+              quantity: 3
             })
         })
         .then( result => {
           expect(result.status).to.equal(200);
-          const filter = {
-            where: {
-              userId: moe.id,
-              status: 'CART'
-            }
-          };
-          return app.get(`/api/orders/${JSON.stringify(filter)}`);
+          return app.get('/api/cart');
         })
         .then( result => {
           expect(result.body.lineItems.length).to.equal(1);
           expect(result.body.lineItems[0].productId).to.equal(bar.id);
+          expect(result.body.lineItems[0].quantity).to.equal(3);
           return app.post(`/api/orders/${result.body.id}/lineItems`)
             .send({
               productId: bar.id,
@@ -152,30 +142,18 @@ describe('routes', ()=> {
             })
         })
         .then( result => {
-          const filter = {
-            where: {
-              userId: moe.id,
-              status: 'CART'
-            }
-          };
-          return app.get(`/api/orders/${JSON.stringify(filter)}`);
+          return app.get('/api/cart');
         })
         .then( result => {
           const lineItem = result.body.lineItems[0];
           expect(result.body.lineItems.length).to.equal(1);
-          expect(result.body.lineItems[0].quantity).to.equal(2);
+          expect(result.body.lineItems[0].quantity).to.equal(4);
           
           return app.delete(`/api/orders/${lineItem.orderId}/lineItems/${lineItem.id}`);
         })
         .then( result => {
           expect(result.status).to.equal(204);
-          const filter = {
-            where: {
-              userId: moe.id,
-              status: 'CART'
-            }
-          };
-          return app.get(`/api/orders/${JSON.stringify(filter)}`);
+          return app.get('/api/cart');
         })
         .then((result)=> {
           expect(result.body.lineItems.length).to.equal(0);
@@ -222,5 +200,3 @@ describe('routes', ()=> {
     });
   });
 });
-
-

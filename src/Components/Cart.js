@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { actions } from '../redux';
+import { mappers } from '../redux';
 const { createOrder, deleteFromCart } = actions;
+const { cartStateMapper, cartDispatchMapper } = mappers;
 
 const Cart = ({ cart, user, createOrder, deleteFromCart })=> {
   return (
@@ -43,41 +45,4 @@ const Cart = ({ cart, user, createOrder, deleteFromCart })=> {
   );
 };
 
-const mapDispatchToProps = (dispatch, { history })=> {
-  return {
-    createOrder: ({ user, cart })=> {
-      dispatch(createOrder({ user, cart, history }));
-    },
-    deleteFromCart: ({ cart, user, lineItem})=> {
-      dispatch(deleteFromCart({ cart, user, lineItem }));
-    }
-  };
-};
-
-const mapStateToProps = ({ products, user, cart })=> {
-  if(cart.lineItems){
-    const productMap = products.reduce((memo, product)=> {
-      memo[product.id] = product;
-      return memo;
-    }, {});
-    const lineItems = cart.lineItems.reduce((memo, lineItem)=> {
-      const product = productMap[lineItem.productId];
-      if(!product){
-        memo.push(lineItem);
-      }
-      else{
-        memo.push(Object.assign({}, lineItem, { product }));
-      }
-      return memo;
-    }, []);
-
-    cart = Object.assign({}, cart, { lineItems });
-  }
-  return {
-    products,
-    user,
-    cart
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps )(Cart);
+export default connect(cartStateMapper, cartDispatchMapper )(Cart);

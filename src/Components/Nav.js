@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { actions } from '../redux';
-const { attemptLogin, logout } = actions;
+import { mappers } from '../redux';
+const { navDispatchMapper, navStateMapper } = mappers;
 
 const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderCount, user })=> {
   const signIn = (ev)=> {
@@ -70,28 +70,5 @@ const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderC
   );
 }
 
-const mapStateToProps = ({ user, products, cart })=> {
-  return {
-    user,
-    isLoggedIn: !!user.id,
-    productCount: products.length,
-    cartCount: cart.lineItems.reduce((memo, lineItem)=> {
-      memo += lineItem.quantity;
-      return memo;
-    }, 0),
-    orderCount: user.id ? user.orders.length : 0
-  };
-};
 
-const mapDispatchToProps = (dispatch, { history })=> {
-  return {
-    logout: ()=> {
-      dispatch(logout(history));
-    },
-    attemptLogin: ( credentials )=> {
-      dispatch(attemptLogin(credentials, history));
-    }
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Nav);
+export default connect(navStateMapper, navDispatchMapper)(Nav);

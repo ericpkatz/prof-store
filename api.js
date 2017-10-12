@@ -30,7 +30,7 @@ app.post('/session', (req, res, next)=> {
   User.authenticate(req.body)
     .then( user => {
       req.session.userId = user.id;
-      res.send(user)
+      res.send(user);
     })
     .catch(next);
 });
@@ -40,9 +40,9 @@ app.delete('/session', (req, res, next)=> {
   res.sendStatus(204);
 });
 
-app.get('/orders/:filter', (req, res, next)=> {
-  Order.getByFilter(req.params.filter)
-    .then( result => res.send(result))
+app.get('/cart', (req, res, next)=> {
+  Order.getCartForUser(req.session)
+    .then( cart => res.send(cart))
     .catch(next);
 });
 
@@ -66,7 +66,7 @@ app.put('/orders/:id', (req, res, next)=> {
 });
 
 app.post('/orders/:id/lineItems', (req, res, next)=> {
-  Order.createLineItem({ orderId: req.params.id, productId: req.body.productId })
+  Order.createLineItem(req.session, req.body.productId, req.body.quantity)
   .then( lineItem => res.send(lineItem))
   .catch(next);
 });

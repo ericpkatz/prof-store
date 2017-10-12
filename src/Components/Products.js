@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { actions } from '../redux';
-const { addToCart } = actions;
+import { mappers } from '../redux';
+const { productsDispatchMapper, productsStateMapper } = mappers;
 
 const Products = ({ products, user, cart, addToCart, isLoggedIn })=> {
   return (
@@ -25,21 +25,5 @@ const Products = ({ products, user, cart, addToCart, isLoggedIn })=> {
   );
 };
 
-const mapDispatchToProps = (dispatch)=> {
-  return {
-    addToCart: ({ user, cart, product })=> {
-      dispatch(addToCart({ user, cart, product}));
-    }
-  };
-};
 
-const mapStateToProps = ({ products, user, cart })=> {
-  return {
-    products,
-    user,
-    cart,
-    isLoggedIn: !!user.id
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps )(Products);
+export default connect(productsStateMapper, productsDispatchMapper )(Products);

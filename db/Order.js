@@ -23,25 +23,24 @@ Order.getByFilter = function(_filter){
   }
 };
 
-Order.createLineItem = function(filter){
-  return conn.models.lineItem.findOne({
-    where: filter 
-  })
-  .then( lineItem => {
-    if(lineItem){
-      lineItem.quantity++;
-    }
-    else {
-      lineItem = conn.models.lineItem.build(filter);
-    }
-    return lineItem.save();
-  });
+Order.createLineItem = function(session, productId, quantity){
+  return Order.getCartForUser(session)
+    .then( cart => {
+      let lineItem = cart.lineItems.find( lineItem => lineItem.productId === productId);
+      if(lineItem){
+        lineItem.quantity += (quantity || 1);
+      }
+      else {
+        lineItem = conn.models.lineItem.build({ orderId: cart.id, productId: productId, quantity: quantity || 1});
+      }
+      return lineItem.save();
+    });
 };
 
-Order.getCartForUser = function(id){
+Order.getCartForUser = function(session){
   return this.findOne({
     where: {
-      userId: id,
+      userId: session.userId,
       status: 'CART'
     }
   })
@@ -50,7 +49,7 @@ Order.getCartForUser = function(id){
       return cart;
     }
     return Order.create({
-      userId: id
+      userId: session.userId 
     });
   })
   .then( cart => {
