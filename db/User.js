@@ -12,6 +12,14 @@ const User = conn.define('user', {
   password: {
     type: Sequelize.STRING,
     allowNull: false
+  },
+  isAdmin: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+  address: {
+    type: Sequelize.JSON,
+    defaultValue: {}
   }
 });
 

@@ -1,4 +1,32 @@
 import axios from 'axios';
+import store from './index';
+
+// Add a request interceptor 
+axios.interceptors.request.use(function (config) {
+    // Do something before request is sent 
+    store.dispatch({
+      type: 'INCREMENT_REQUESTS'
+    });
+    return config;
+  }, function (error) {
+    // Do something with request error 
+    return Promise.reject(error);
+  });
+ 
+// Add a response interceptor 
+axios.interceptors.response.use(function (response) {
+    // Do something with response data 
+    store.dispatch({
+      type: 'DECREMENT_REQUESTS'
+    });
+    return response;
+  }, function (error) {
+    // Do something with response error 
+    store.dispatch({
+      type: 'DECREMENT_REQUESTS'
+    });
+    return Promise.reject(error);
+  });
 
 const fetchProducts = ()=> {
   return (dispatch)=> {
@@ -7,6 +35,12 @@ const fetchProducts = ()=> {
   };
 };
 
+const createProduct = (product)=> {
+  return (dispatch)=> {
+    return axios.post('/api/products', product)
+      .then(response => dispatch(fetchProducts()));
+  };
+};
 const productsLoaded = (products)=> {
   return {
     type: 'SET_PRODUCTS',
@@ -131,7 +165,7 @@ const attemptLogin = (credentials, cart, history)=> {
     return axios.post('/api/session', credentials)
       .then(response => {
         dispatch(userLoaded(response.data));
-        let localItems;
+        let localItems = [];
         if(cart.lineItems.length){
           const storage = window.localStorage;
           storage.removeItem('CART');
@@ -191,7 +225,8 @@ const actions = {
   fetchUser,
   attemptLogin,
   logout,
-  createOrder
+  createOrder,
+  createProduct
 };
 
 export default actions;

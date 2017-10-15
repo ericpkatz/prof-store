@@ -6,6 +6,10 @@ const Order = conn.define('order', {
     type: Sequelize.STRING ,
     defaultValue: 'CART'
   },
+  address: {
+    type: Sequelize.JSON,
+    defaultValue: {}
+  }
 });
 
 Order.updateFromRequestBody = function(id, body){

@@ -11,6 +11,12 @@ app.get('/products', (req, res, next)=> {
     .catch(next);
 });
 
+app.post('/products', (req, res, next)=> {
+  Product.create(req.body)
+    .then( products => res.send(products))
+    .catch(next);
+});
+
 app.post('/users', (req, res, next)=> {
   User.create(req.body)
     .then( user => {
@@ -67,6 +73,8 @@ app.put('/orders/:id', (req, res, next)=> {
 
 app.post('/orders/:id/lineItems', (req, res, next)=> {
   Order.createLineItem(req.session, req.body.productId, req.body.quantity)
-  .then( lineItem => res.send(lineItem))
+  .then( lineItem => {
+    setTimeout(()=> res.send(lineItem), 500);
+  })
   .catch(next);
 });

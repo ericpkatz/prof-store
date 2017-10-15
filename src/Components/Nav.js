@@ -14,7 +14,8 @@ const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderC
     attemptLogin(credentials, cart);
   }
   return (
-    <div>
+    <div className='navbar'>
+      <div className='container-fluid'>
       <ul className='nav nav-tabs'>
         <li>
           <Link to='/'>
@@ -42,13 +43,6 @@ const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderC
       }
       </ul>
       {
-        isLoggedIn && (
-          <div className='well'>
-            <button className='btn btn-warning' onClick={ logout }>Sign out { user.email }</button>
-          </div>
-        )
-      }
-      {
         !isLoggedIn && (
       
       <form className="navbar-form navbar-right" role="search" onSubmit={ signIn }>
@@ -62,6 +56,14 @@ const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderC
       </form>
         )
       }
+      {
+        isLoggedIn && (
+          <div className='well'>
+            <button className='btn btn-warning' onClick={ logout }>Sign out { user.email }</button>
+          </div>
+        )
+      }
+      </div>
     </div>
   );
 }

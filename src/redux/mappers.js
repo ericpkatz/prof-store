@@ -1,5 +1,5 @@
 import actions from './actions';
-const { addToCart, deleteFromCart, createOrder, attemptLogin, logout } = actions;
+const { createProduct, addToCart, deleteFromCart, createOrder, attemptLogin, logout } = actions;
 
 const cartStateMapper = ({ products, user, cart })=> {
   if(cart.lineItems){
@@ -30,7 +30,8 @@ const cartStateMapper = ({ products, user, cart })=> {
 const cartDispatchMapper = (dispatch, { history })=> {
   return {
     createOrder: ({ user, cart })=> {
-      dispatch(createOrder({ user, cart, history }));
+      history.push('/cart/address');
+      //dispatch(createOrder({ user, cart, history }));
     },
     deleteFromCart: ({ cart, user, lineItem})=> {
       dispatch(deleteFromCart({ cart, user, lineItem }));
@@ -115,6 +116,14 @@ const productsStateMapper = ({ products, user, cart })=> {
   };
 };
 
+const productFormDispatchMapper = (dispatch)=> {
+  return {
+    createProduct: (product)=> {
+      return dispatch(createProduct(product));
+    }
+  };
+};
+
 export default {
   cartStateMapper,
   cartDispatchMapper,
@@ -123,5 +132,6 @@ export default {
   navStateMapper,
   navDispatchMapper,
   productsDispatchMapper,
-  productsStateMapper
+  productsStateMapper,
+  productFormDispatchMapper
 };

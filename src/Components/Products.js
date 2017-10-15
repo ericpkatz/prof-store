@@ -1,23 +1,29 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { mappers } from '../redux';
+import ProductForm from './ProductForm';
 const { productsDispatchMapper, productsStateMapper } = mappers;
 
 const Products = ({ products, user, cart, addToCart, isLoggedIn })=> {
   return (
-    <ul className='list-group'>
+    <div>
+      <ul className='list-group'>
+        {
+          products.map( product => {
+            return (
+              <li className='list-group-item' key={ product.id }>
+                { product.name }
+                <button className='pull-right btn btn-primary' onClick={ ()=> addToCart({ user, product, cart })}> Add to Cart</button>
+                <br style={{ clear: 'both' }} />
+              </li>
+            )
+          })
+        }
+      </ul>
       {
-        products.map( product => {
-          return (
-            <li className='list-group-item' key={ product.id }>
-              { product.name }
-              <button className='pull-right btn btn-primary' onClick={ ()=> addToCart({ user, product, cart })}> Add to Cart</button>
-              <br style={ { clear: 'both' }} />
-            </li>
-          )
-        })
+        user.isAdmin && <ProductForm />
       }
-    </ul>
+    </div>
   );
 };
 

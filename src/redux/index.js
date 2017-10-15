@@ -23,10 +23,23 @@ const productsReducer = (state = [], action)=> {
   return state;
 }
 
+const requestsReducer = (state = 0, action)=> {
+  switch(action.type){
+    case 'INCREMENT_REQUESTS':
+      state = state + 1;
+      break;
+    case 'DECREMENT_REQUESTS':
+      state = state - 1;
+      break;
+  }
+  return state;
+};
+
 const reducer = combineReducers({
   user: userReducer,
   products: productsReducer,
-  cart: cartReducer
+  cart: cartReducer,
+  requests: requestsReducer
 });
 
 const middleware = [applyMiddleware(createLogger()), applyMiddleware(thunk)];

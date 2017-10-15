@@ -14,7 +14,7 @@ const sync = ()=> {
   return conn.sync({ force: true });
 };
 
-const userNames = ['moe', 'larry', 'curly'];
+const userNames = ['moe', 'larry', 'curly', 'admin'];
 const productNames = ['foo', 'bar', 'bazz'];
 
 const seed = ()=> {
@@ -22,7 +22,8 @@ const seed = ()=> {
     return {
       name, 
       email: `${name}@${name}.com`,
-      password: `${name}123`
+      password: `${name}123`,
+      isAdmin: name === 'admin' ? true : false
     }
   });
 
