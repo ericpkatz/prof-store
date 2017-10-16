@@ -1,4 +1,4 @@
-import actions from './actions';
+import * as actions from './actions';
 const { createProduct, addToCart, deleteFromCart, createOrder, attemptLogin, logout } = actions;
 
 const cartStateMapper = ({ products, user, cart })=> {

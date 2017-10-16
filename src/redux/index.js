@@ -48,7 +48,7 @@ const store = createStore(reducer, ...middleware);
 
 export default store;
 
-import actions from './actions';
+import * as actions from './actions';
 export { actions };
 
 import mappers from './mappers';

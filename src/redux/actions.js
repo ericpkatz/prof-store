@@ -28,27 +28,28 @@ axios.interceptors.response.use(function (response) {
     return Promise.reject(error);
   });
 
-const fetchProducts = ()=> {
+export const fetchProducts = ()=> {
   return (dispatch)=> {
     return axios.get('/api/products')
       .then(response => dispatch(productsLoaded(response.data)));
   };
 };
 
-const createProduct = (product)=> {
+export const createProduct = (product)=> {
   return (dispatch)=> {
     return axios.post('/api/products', product)
       .then(response => dispatch(fetchProducts()));
   };
 };
-const productsLoaded = (products)=> {
+
+export const productsLoaded = (products)=> {
   return {
     type: 'SET_PRODUCTS',
     products
   };
 };
 
-const fetchUser = ()=> {
+export const fetchUser = ()=> {
   return (dispatch)=> {
     return axios.get('/api/session')
       .then(response => {
@@ -62,7 +63,7 @@ const fetchUser = ()=> {
   };
 };
 
-const loadLocalCart = (dispatch)=> {
+export const loadLocalCart = (dispatch)=> {
   let cart = { lineItems: [] };
   const storage = window.localStorage;
   try{
@@ -80,7 +81,7 @@ const loadLocalCart = (dispatch)=> {
   dispatch(cartLoaded(cart));
 };
 
-const loadCart = (userId)=> {
+export const loadCart = (userId)=> {
   return (dispatch)=> {
     return axios.get('/api/cart')
       .then(response => {
@@ -91,7 +92,7 @@ const loadCart = (userId)=> {
   };
 };
 
-const addToCart = ({ user, product, cart, quantity = 1 })=> {
+export const addToCart = ({ user, product, cart, quantity = 1 })=> {
   return (dispatch)=> {
     if(!user.id){
       let lineItem = cart.lineItems.find( lineItem => lineItem.productId === product.id);
@@ -121,7 +122,7 @@ const addToCart = ({ user, product, cart, quantity = 1 })=> {
   };
 };
 
-const deleteFromCart = ({ user, lineItem, cart })=> {
+export const deleteFromCart = ({ user, lineItem, cart })=> {
   return (dispatch)=> {
     if(!user.id){
       const lineItems = cart.lineItems.filter( _lineItem=> {
@@ -138,7 +139,7 @@ const deleteFromCart = ({ user, lineItem, cart })=> {
   };
 };
 
-const createOrder = ({ user, cart, history })=> {
+export const createOrder = ({ user, cart, history })=> {
   return (dispatch)=> {
     return axios.put(`/api/orders/${cart.id}/`, { status: 'ORDER' })
       .then(response => {
@@ -149,7 +150,7 @@ const createOrder = ({ user, cart, history })=> {
   };
 };
 
-const logout = (history)=> {
+export const logout = (history)=> {
   return (dispatch)=> {
     return axios.delete('/api/session')
       .then(response => {
@@ -160,7 +161,7 @@ const logout = (history)=> {
   };
 };
 
-const attemptLogin = (credentials, cart, history)=> {
+export const attemptLogin = (credentials, cart, history)=> {
   return (dispatch)=> {
     return axios.post('/api/session', credentials)
       .then(response => {
@@ -197,7 +198,6 @@ const attemptLogin = (credentials, cart, history)=> {
 };
 
 const userLoaded = (user)=> {
-  console.log(user);
   return {
     type: 'SET_USER',
     user
@@ -217,16 +217,3 @@ const loggedOut = ()=> {
     user: {}
   };
 };
-
-const actions = {
-  addToCart,
-  deleteFromCart,
-  fetchProducts,
-  fetchUser,
-  attemptLogin,
-  logout,
-  createOrder,
-  createProduct
-};
-
-export default actions;
