@@ -141,6 +141,11 @@ const productsDispatchMapper = (dispatch)=> {
 };
 
 const productsStateMapper = ({ products, user, cart })=> {
+  products = products.map( product => {
+    const lineItem = cart.lineItems.find( lineItem=> lineItem.productId === product.id );
+    return Object.assign({}, product, { lineItem });
+  });
+
   return {
     products,
     user,

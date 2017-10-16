@@ -10,9 +10,9 @@ const Cart = ({ cart, user, createOrder, deleteFromCart })=> {
     <div>
       <ul className='list-group'>
         {
-          cart.lineItems.map( lineItem => {
+          cart.lineItems.map( (lineItem, idx) => {
             return (
-              <li className='list-group-item' key={ lineItem.id }>
+              <li className='list-group-item' key={ lineItem.id || idx }>
                 LineItemId: { lineItem.id }
                 <br />
                 ProductId:

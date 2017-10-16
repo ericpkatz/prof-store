@@ -13,6 +13,15 @@ const Products = ({ products, user, cart, addToCart, isLoggedIn })=> {
             return (
               <li className='list-group-item' key={ product.id }>
                 { product.name }
+                { 
+                  product.lineItem && (
+                    <div style={ { marginTop: '5px' } }>
+                      <span className='label label-default'>
+                        This item is in your cart { product.lineItem.quantity } times.
+                      </span>
+                    </div>
+                  )
+                }
                 <button className='pull-right btn btn-primary' onClick={ ()=> addToCart({ user, product, cart })}> Add to Cart</button>
                 <br style={{ clear: 'both' }} />
               </li>
