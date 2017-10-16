@@ -6,8 +6,10 @@ const LoadingIndicator = ({ isLoading})=> {
     return null;
   }
   return (
-    <div className='well'>
-      Loading
+    <div className='waiting'>
+      <p className='spinner'>
+        Loading...
+      </p>
     </div>
   );
 };

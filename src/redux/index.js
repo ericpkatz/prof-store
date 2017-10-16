@@ -42,7 +42,9 @@ const reducer = combineReducers({
   requests: requestsReducer
 });
 
-const middleware = [applyMiddleware(createLogger()), applyMiddleware(thunk)];
+const middleware = [applyMiddleware(thunk)];
+if(!window.localStorage.getItem('NO_REDUX_LOG'))
+  middleware.unshift(applyMiddleware(createLogger()));
 const store = createStore(reducer, ...middleware);
 
 

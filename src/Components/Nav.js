@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { mappers } from '../redux';
 const { navDispatchMapper, navStateMapper } = mappers;
 
-const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderCount, user, cart })=> {
+const Nav = ({ isLoggedIn, attemptLogin, logout, user, cart, links })=> {
   const signIn = (ev)=> {
     ev.preventDefault();
     const credentials = {
@@ -16,30 +16,15 @@ const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderC
   return (
     <div className='navbar'>
       <div className='container-fluid'>
-      <ul className='nav nav-tabs'>
-        <li>
-          <Link to='/'>
-            Home
-          </Link>
-        </li>
-        <li>
-          <Link to='/products'>
-            Products ({ productCount })
-          </Link>
-        </li>
-        <li>
-          <Link to='/cart'>
-            Cart ({ cartCount })
-          </Link>
-        </li>
+      <ul className='nav nav-tabs' style={ { marginBottom: '10px' } }>
       {
-        isLoggedIn && (
-          <li>
-            <Link to='/orders'>
-              Orders ({ orderCount })
+        links.map( link => (
+          <li key={ link.path } className={ link.active ? 'active': ''}>
+            <Link to={ link.path }>
+              { link.text }
             </Link>
           </li>
-        )
+        ))
       }
       </ul>
       {
@@ -66,7 +51,7 @@ const Nav = ({ isLoggedIn, productCount, attemptLogin, logout, cartCount, orderC
       </div>
     </div>
   );
-}
+};
 
 
 export default connect(navStateMapper, navDispatchMapper)(Nav);

@@ -81,17 +81,43 @@ const ordersStateMapper = ({ user, products, cart })=> {
   };
 };
 
-const navStateMapper = ({ user, products, cart })=> {
+const navStateMapper = ({ user, products, cart }, { location })=> {
+  const isLoggedIn = !!user.id;
+
+  const cartCount = cart.lineItems.reduce((memo, lineItem)=> {
+    memo += lineItem.quantity;
+    return memo;
+  }, 0);
+
+  const links = [
+    {
+      text: 'Home',
+      path: '/'
+    },
+    {
+      text: `Products (${products.length})`,
+      path: '/products'
+    },
+    {
+      text: `Cart (${cartCount})`,
+      path: '/cart'
+    }
+  ];
+  if(isLoggedIn){
+    links.push({
+      text: `Orders (${user.orders.length})`,
+      path: '/orders'
+    });
+  }
+  links.forEach((link)=> {
+    if(link.path === location.pathname || (link.path !== '\/' && location.pathname.indexOf(link.path) === 0 )){
+      link.active = true;
+    }
+  });
   return {
     user,
-    isLoggedIn: !!user.id,
-    productCount: products.length,
-    cart: cart,
-    cartCount: cart.lineItems.reduce((memo, lineItem)=> {
-      memo += lineItem.quantity;
-      return memo;
-    }, 0),
-    orderCount: user.id ? user.orders.length : 0
+    isLoggedIn,
+    links
   };
 };
 
