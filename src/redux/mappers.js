@@ -1,5 +1,13 @@
 import * as actions from './actions';
-const { createProduct, addToCart, deleteFromCart, createOrder, attemptLogin, logout } = actions;
+const { 
+  createProduct,
+  addToCart,
+  deleteFromCart,
+  createOrder,
+  attemptLogin,
+  logout,
+  addAddress
+  } = actions;
 
 const cartStateMapper = ({ products, user, cart })=> {
   if(cart.lineItems){
@@ -31,7 +39,6 @@ const cartDispatchMapper = (dispatch, { history })=> {
   return {
     createOrder: ({ user, cart })=> {
       history.push('/cart/address');
-      //dispatch(createOrder({ user, cart, history }));
     },
     deleteFromCart: ({ cart, user, lineItem})=> {
       dispatch(deleteFromCart({ cart, user, lineItem }));
@@ -124,7 +131,44 @@ const productFormDispatchMapper = (dispatch)=> {
   };
 };
 
+const addressStateMapper = ({ user, cart })=> {
+  let address;
+
+  if(cart.address && cart.address.address_components){
+    address = cart.address;
+  }
+  let addresses = [];
+  if(user.orders){
+    addresses = user.orders.reduce((memo, order)=> {
+      const address = memo.find( address => address.formatted_address === order.address.formatted_address);
+      if(!address){
+        memo.push(order.address);
+      }
+      return memo;
+    }, []);
+  }
+  return {
+    cart,
+    user,
+    address,
+    addresses
+  };
+};
+
+const addressDispatchMapper = (dispatch, { history })=> {
+  return {
+    addAddress: ({ user, cart, address })=> {
+      dispatch(addAddress({ user, cart, address }));
+    },
+    createOrder: ({ user, cart })=> {
+      dispatch(createOrder({ user, cart, history }));
+    }
+  };
+};
+
 export default {
+  addressStateMapper,
+  addressDispatchMapper,
   cartStateMapper,
   cartDispatchMapper,
   ordersDispatchMapper,

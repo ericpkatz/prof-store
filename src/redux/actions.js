@@ -150,6 +150,16 @@ export const createOrder = ({ user, cart, history })=> {
   };
 };
 
+export const addAddress = ({ user, cart, address })=> {
+  return (dispatch)=> {
+    return axios.put(`/api/orders/${cart.id}/`, { address })
+      .then(response => {
+        dispatch(fetchUser());
+      })
+      .catch( ex => console.log(ex))
+  };
+};
+
 export const logout = (history)=> {
   return (dispatch)=> {
     return axios.delete('/api/session')

@@ -12,6 +12,8 @@ const Orders = ({ orders, addToCart, cart, user })=> {
           return (
             <li className='list-group-item' key={ order.id }>
               Order ID: { order.id }
+              <br />
+              Address: { order.address.formatted_address }
               <br style={ { clear: 'both' }} />
               <ul>
                 {

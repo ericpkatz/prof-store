@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { mappers } from '../redux';
+const { addressStateMapper, addressDispatchMapper } = mappers;
 
 /*
   var container = $(config.id);
@@ -51,24 +53,39 @@ class PlaceAutocomplete extends Component{
   }
 }
 
-const Address = ({ addAddress })=> {
+const Address = ({ addAddress, user, cart, address, createOrder, addresses })=> {
+  const setAddress = (ev)=> {
+    const address = addresses.find( address=> address.formatted_address === ev.target.value);
+    addAddress({ user, cart, address });
+  }
   return (
     <div>
       <Link to='/cart'>Back to cart</Link>
       <div className='well'>
-        Add an Address:
-        <PlaceAutocomplete addAddress={ addAddress }/>
+        Add a new Address:
+        <PlaceAutocomplete addAddress={ (address)=> addAddress({ user, cart, address }) }/>
+      {
+        addresses.length > 0 && (
+          <select className='form-control' onChange={ setAddress }>
+            <option>-- choose an address --</option>
+            {
+              addresses.map( (address, idx) => {
+                return (
+                  <option key={ idx }>{ address.formatted_address }</option>
+                )
+              })
+            }
+          </select>
+        )
+      }
+      {
+        address &&  (
+          <button onClick={ ()=> createOrder({ user, cart })}  className='btn btn-primary'>Use { address.formatted_address }</button>
+        )
+      }
       </div>
     </div>
   );
 };
 
-const mapDispatchToProps = (dispatch)=> {
-  return {
-    addAddress: (address)=> {
-      console.log(address);
-    }
-  }
-}
-
-export default connect(null, mapDispatchToProps)(Address);
+export default connect(addressStateMapper, addressDispatchMapper)(Address);
