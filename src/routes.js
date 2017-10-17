@@ -12,6 +12,7 @@ import Orders from './Components/Orders';
 import Cart from './Components/Cart';
 import Nav from './Components/Nav';
 import Address from './Components/Address';
+import Analytics from './Components/Analytics';
 import Store from './Components/Store';
 import LoadingIndicator from './Components/LoadingIndicator';
 
@@ -33,6 +34,7 @@ class Routes extends Component {
           <Route exact path='/cart' component={ Cart } />
           <Route exact path='/cart/address' component={ Address } />
           <Route exact path='/orders' component={ Orders } />
+          <Route exact path='/analytics' component={ Analytics } />
           <Route component={ Store } />
         </div>
       </Router>

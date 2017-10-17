@@ -1,4 +1,4 @@
-import * as actions from './actions';
+import * as actions from '../actions';
 const { 
   createProduct,
   addToCart,
@@ -83,6 +83,7 @@ const ordersStateMapper = ({ user, products, cart })=> {
 
 const navStateMapper = ({ user, products, cart }, { location })=> {
   const isLoggedIn = !!user.id;
+  const isAdmin = user.isAdmin;
 
   const cartCount = cart.lineItems.reduce((memo, lineItem)=> {
     memo += lineItem.quantity;
@@ -109,6 +110,12 @@ const navStateMapper = ({ user, products, cart }, { location })=> {
       path: '/orders'
     });
   }
+  if(isAdmin){
+    links.push({
+      text: `Analytics`,
+      path: '/analytics'
+    });
+  }
   links.forEach((link)=> {
     if(link.path === location.pathname || (link.path !== '\/' && location.pathname.indexOf(link.path) === 0 )){
       link.active = true;
@@ -117,7 +124,8 @@ const navStateMapper = ({ user, products, cart }, { location })=> {
   return {
     user,
     isLoggedIn,
-    links
+    links,
+    cart
   };
 };
 

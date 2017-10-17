@@ -34,7 +34,8 @@ app.use(require('body-parser').json());
   '/products',
   '/cart',
   '/cart/address',
-  '/orders'
+  '/orders',
+  '/analytics'
 ].forEach( url => app.get(url, (req, res, next)=> {
   res.render('index.html', { GOOGLE_PLACES_API_KEY: config.GOOGLE_PLACES_API_KEY });
 }));

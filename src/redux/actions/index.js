@@ -1,5 +1,5 @@
 import axios from 'axios';
-import store from './index';
+import store from '../index';
 
 // Add a request interceptor 
 axios.interceptors.request.use(function (config) {
@@ -196,13 +196,11 @@ export const attemptLogin = (credentials, cart, history)=> {
                 }
               ));
             });
-            console.log('LOCAL', localItems);
-
           });
         history.push('/products');
       })
       .catch( ex => {
-        console.log('user not logged in')
+        console.log(ex)
       })
   };
 };
