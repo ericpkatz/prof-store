@@ -85,7 +85,7 @@ const ordersStateMapper = ({ user, products, cart })=> {
   };
 };
 
-const navStateMapper = ({ user, products, cart }, { location })=> {
+const navStateMapper = ({ user, products, cart, orderHistory }, { location })=> {
   const isLoggedIn = !!user.id;
   const isAdmin = user.isAdmin;
 
@@ -130,7 +130,7 @@ const navStateMapper = ({ user, products, cart }, { location })=> {
   }
   if(isAdmin){
     links.push({
-      text: `Analytics`,
+      text: `Analytics (${ orderHistory.length})`,
       path: '/analytics'
     });
   }
@@ -223,6 +223,12 @@ const addressDispatchMapper = (dispatch, { history })=> {
   };
 };
 
+const analyticsStateMapper = ({ orderHistory })=> {
+  return {
+    orderHistory
+  };
+};
+
 export default {
   addressStateMapper,
   addressDispatchMapper,
@@ -234,5 +240,6 @@ export default {
   navDispatchMapper,
   productsDispatchMapper,
   productsStateMapper,
-  productFormDispatchMapper
+  productFormDispatchMapper,
+  analyticsStateMapper
 };

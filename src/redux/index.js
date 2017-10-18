@@ -23,6 +23,13 @@ const productsReducer = (state = [], action)=> {
   return state;
 }
 
+const orderHistoryReducer = (state = [], action)=> {
+  if(action.type === 'SET_ORDER_HISTORY'){
+    state = action.orderHistory || [];
+  }
+  return state;
+}
+
 const requestsReducer = (state = 0, action)=> {
   switch(action.type){
     case 'INCREMENT_REQUESTS':
@@ -39,7 +46,8 @@ const reducer = combineReducers({
   user: userReducer,
   products: productsReducer,
   cart: cartReducer,
-  requests: requestsReducer
+  requests: requestsReducer,
+  orderHistory: orderHistoryReducer
 });
 
 const middleware = [applyMiddleware(thunk)];

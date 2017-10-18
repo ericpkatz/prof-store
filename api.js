@@ -65,6 +65,17 @@ app.delete('/orders/:orderId/lineItems/:id', (req, res, next)=> {
   .catch(next);
 });
 
+app.get('/orders', (req, res,  next)=> {
+  Order.findAll({
+    where: {
+      status: 'ORDER'
+    }
+  })
+  .then( orders => res.send(orders))
+  .catch(next);
+
+});
+
 app.put('/orders/:id', (req, res, next)=> {
   Order.updateFromRequestBody(req.params.id, req.body)
     .then( order => res.send(order))
