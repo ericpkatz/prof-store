@@ -30,7 +30,7 @@ const seed = ()=> {
   const products = productNames.map( (name, idx) => {
     return {
       name,
-      price: idx
+      price: idx + 1
     }
   });
 

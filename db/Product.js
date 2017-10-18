@@ -8,7 +8,10 @@ const Product = conn.define('product', {
   },
   price: {
     type: Sequelize.DECIMAL,
-    allowNull: false
+    allowNull: false,
+    get: function(price){
+      return parseFloat(this.getDataValue('price'));
+    }
   }
 });
 

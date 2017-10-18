@@ -65,11 +65,15 @@ const ordersStateMapper = ({ user, products, cart })=> {
           memo.push(lineItem);
         }
         else{
-          memo.push(Object.assign({}, lineItem, { product }));
+          memo.push(Object.assign({}, lineItem, { product, subTotal: product.price * lineItem.quantity }));
         }
         return memo;
       }, []);
-      memo.push(Object.assign({}, order, { lineItems }));
+      const total = lineItems.reduce( (_total, lineItem) => {
+        _total += lineItem.subTotal;
+        return _total;
+      }, 0);
+      memo.push(Object.assign({}, order, { lineItems, total }));
       return memo;
     }, []);
     user = Object.assign({}, user, { orders });
@@ -85,8 +89,22 @@ const navStateMapper = ({ user, products, cart }, { location })=> {
   const isLoggedIn = !!user.id;
   const isAdmin = user.isAdmin;
 
+  const productMap = products.reduce((memo, product)=> {
+    memo[product.id] = product;
+    return memo;
+  }, {});
+
   const cartCount = cart.lineItems.reduce((memo, lineItem)=> {
     memo += lineItem.quantity;
+    return memo;
+  }, 0);
+
+  const cartTotal = cart.lineItems.reduce((memo, lineItem)=> {
+    const product = productMap[lineItem.productId];
+    if(!product){
+      return memo;
+    }
+    memo += product.price * lineItem.quantity; 
     return memo;
   }, 0);
 
@@ -100,7 +118,7 @@ const navStateMapper = ({ user, products, cart }, { location })=> {
       path: '/products'
     },
     {
-      text: `Cart (${cartCount})`,
+      text: `Cart (${cartCount} items -  $${ cartTotal.toFixed(2) })`,
       path: '/cart'
     }
   ];
@@ -125,7 +143,7 @@ const navStateMapper = ({ user, products, cart }, { location })=> {
     user,
     isLoggedIn,
     links,
-    cart
+    cart,
   };
 };
 

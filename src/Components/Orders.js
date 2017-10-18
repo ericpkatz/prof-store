@@ -13,6 +13,8 @@ const Orders = ({ orders, addToCart, cart, user })=> {
             <li className='list-group-item' key={ order.id }>
               Order ID: { order.id }
               <br />
+              Total: { `$${order.total.toFixed(2)}`}
+              <br />
               Address: { order.address.formatted_address }
               <br style={ { clear: 'both' }} />
               <ul>
@@ -30,6 +32,8 @@ const Orders = ({ orders, addToCart, cart, user })=> {
                         <button className='btn btn-primary' onClick={ ()=> addToCart({ user, product: lineItem.product, cart })}>Buy Again</button>
                         <br />
                         Quanity: { lineItem.quantity }
+                        <br />
+                        Subtotal: { `$${lineItem.subTotal.toFixed(2)}` }
                       </li>
                     );
                   })

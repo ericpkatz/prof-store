@@ -13,6 +13,7 @@ const Products = ({ products, user, cart, addToCart, isLoggedIn })=> {
             return (
               <li className='list-group-item' key={ product.id }>
                 { product.name }
+                 { ` $${product.price.toFixed(2) }` }
                 { 
                   product.lineItem && (
                     <div style={ { marginTop: '5px' } }>
