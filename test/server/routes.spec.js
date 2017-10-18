@@ -2,6 +2,7 @@ const expect = require('chai').expect;
 const supertest = require('supertest');
 const app = supertest.agent(require('../../app'));
 const db = require('../../db');
+process.env.SESSION_SECRET='fizz';
 
 describe('routes', ()=> {
   let seeded, moe, bar, foo;
