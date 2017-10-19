@@ -69,7 +69,8 @@ app.get('/orders', (req, res,  next)=> {
   Order.findAll({
     where: {
       status: 'ORDER'
-    }
+    },
+    include: [ LineItem ]
   })
   .then( orders => res.send(orders))
   .catch(next);

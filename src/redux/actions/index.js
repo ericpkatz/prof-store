@@ -62,9 +62,7 @@ export const fetchUser = ()=> {
       .then(response => {
         dispatch(userLoaded(response.data))
         dispatch(loadCart(response.data.id));
-        if(response.data.isAdmin){
-          dispatch(fetchOrderHistory());
-        }
+        dispatch(fetchOrderHistory());
       })
       .catch( ex => {
         console.log('user not logged in')
@@ -154,9 +152,6 @@ export const createOrder = ({ user, cart, history })=> {
     return axios.put(`/api/orders/${cart.id}/`, { status: 'ORDER' })
       .then(response => {
         dispatch(fetchUser());
-        if(user.isAdmin){
-          dispatch(fetchOrderHistory());
-        }
         history.push('/orders');
       })
       .catch( ex => console.log(ex))
@@ -189,9 +184,7 @@ export const attemptLogin = (credentials, cart, history)=> {
     return axios.post('/api/session', credentials)
       .then(response => {
         dispatch(userLoaded(response.data));
-        if(response.data.isAdmin){
           dispatch(fetchOrderHistory());
-        }
         let localItems = [];
         if(cart.lineItems.length){
           const storage = window.localStorage;

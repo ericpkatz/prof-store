@@ -108,6 +108,28 @@ const navStateMapper = ({ user, products, cart, orderHistory }, { location })=> 
     return memo;
   }, 0);
 
+  const salesMap = orderHistory.reduce((memo, order)=> {
+    if(!order.lineItems){
+      return memo;
+    }
+    order.lineItems.forEach( lineItem => {
+      if(memo[lineItem.productId] === undefined){
+        memo[lineItem.productId] = 0;
+      }
+      memo[lineItem.productId]+= lineItem.quantity;
+    });
+    return memo;
+  }, {});
+
+  const topSellerId = Object.keys(salesMap).reduce((memo, key)=> {
+    if(salesMap[key] > memo){
+      memo = key;
+    }
+    return memo;
+  }, 0);
+
+  const topSeller = productMap[topSellerId];
+
   const links = [
     {
       text: 'Home',
@@ -144,6 +166,7 @@ const navStateMapper = ({ user, products, cart, orderHistory }, { location })=> 
     isLoggedIn,
     links,
     cart,
+    topSeller
   };
 };
 
@@ -154,6 +177,9 @@ const navDispatchMapper = (dispatch, { history })=> {
     },
     attemptLogin: ( credentials, cart )=> {
       dispatch(attemptLogin(credentials, cart, history));
+    },
+    addToCart: ({ user, cart, product })=> {
+      dispatch(addToCart({ user, cart, product}));
     }
   };
 }

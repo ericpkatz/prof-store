@@ -8,7 +8,7 @@ const Analytics = ({ orderHistory })=> {
     <div>
       <div className='well'>
         Show analytic data
-        <h1>{ orderHistory.length }</h1>
+        <h1>Total Orders: { orderHistory.length }</h1>
       </div>
     </div>
   );

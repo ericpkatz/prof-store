@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { mappers } from '../redux';
 const { navDispatchMapper, navStateMapper } = mappers;
 
-const Nav = ({ isLoggedIn, attemptLogin, logout, user, cart, links })=> {
+const Nav = ({ isLoggedIn, attemptLogin, logout, user, cart, links, topSeller, addToCart })=> {
   const signIn = (ev)=> {
     ev.preventDefault();
     const credentials = {
@@ -25,6 +25,15 @@ const Nav = ({ isLoggedIn, attemptLogin, logout, user, cart, links })=> {
             </Link>
           </li>
         ))
+      }
+      {
+        topSeller && (
+          <li>
+            <a href='#' onClick={()=> addToCart({ user, cart, product: topSeller })}>
+              Order Top Seller <span className='label label-success'>{ topSeller.name }</span>
+            </a>
+          </li>
+        )
       }
       </ul>
       {
