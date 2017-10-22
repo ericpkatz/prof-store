@@ -15,6 +15,7 @@ import Address from './Components/Address';
 import Analytics from './Components/Analytics';
 import Store from './Components/Store';
 import LoadingIndicator from './Components/LoadingIndicator';
+import OrdersMap from './Components/OrdersMap';
 
 class Routes extends Component {
   constructor(){
@@ -27,14 +28,21 @@ class Routes extends Component {
     return (
       <Router>
         <div className='container'>
-          <Route component={ Nav } />
           <Route component={ LoadingIndicator } />
-          <Route exact path='/' component={ Home } />
-          <Route path='/products' component={ Products } />
-          <Route exact path='/cart' component={ Cart } />
-          <Route exact path='/cart/address' component={ Address } />
-          <Route exact path='/orders' component={ Orders } />
-          <Route exact path='/analytics' component={ Analytics } />
+          <Route component={ Nav } />
+          <div className='row'>
+            <div className='col-xs-8'>
+              <Route exact path='/' component={ Home } />
+              <Route path='/products' component={ Products } />
+              <Route exact path='/cart' component={ Cart } />
+              <Route exact path='/cart/address' component={ Address } />
+              <Route exact path='/orders' component={ Orders } />
+              <Route exact path='/analytics' component={ Analytics } />
+            </div>
+            <div className='col-xs-4'>
+              <Route component={ OrdersMap } />
+            </div>
+          </div>
           <Route component={ Store } />
         </div>
       </Router>

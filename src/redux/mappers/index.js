@@ -251,7 +251,16 @@ const addressDispatchMapper = (dispatch, { history })=> {
 
 const analyticsStateMapper = ({ orderHistory })=> {
   return {
-    orderHistory
+    orderHistory,
+  };
+};
+
+const ordersMapStateMapper = ({ orderHistory })=> {
+  const addresses = orderHistory.map( order => {
+    return order.address;
+  });
+  return {
+    addresses
   };
 };
 
@@ -267,5 +276,6 @@ export default {
   productsDispatchMapper,
   productsStateMapper,
   productFormDispatchMapper,
-  analyticsStateMapper
+  analyticsStateMapper,
+  ordersMapStateMapper
 };
