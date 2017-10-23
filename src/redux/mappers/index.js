@@ -1,6 +1,8 @@
 import * as actions from '../actions';
 const { 
+  deleteProduct,
   createProduct,
+  undeleteProduct,
   addToCart,
   deleteFromCart,
   createOrder,
@@ -186,6 +188,12 @@ const navDispatchMapper = (dispatch, { history })=> {
 
 const productsDispatchMapper = (dispatch)=> {
   return {
+    deleteProduct: (product)=> {
+      return dispatch(deleteProduct(product));
+    },
+    undeleteProduct: (product)=> {
+      return dispatch(undeleteProduct(product));
+    },
     addToCart: ({ user, cart, product })=> {
       dispatch(addToCart({ user, cart, product}));
     }
@@ -197,6 +205,9 @@ const productsStateMapper = ({ products, user, cart })=> {
     const lineItem = cart.lineItems.find( lineItem=> lineItem.productId === product.id );
     return Object.assign({}, product, { lineItem });
   });
+  if(!user.isAdmin){
+    products = products.filter( product => !product.isDeleted );
+  }
 
   return {
     products,

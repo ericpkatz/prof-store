@@ -17,6 +17,26 @@ app.post('/products', (req, res, next)=> {
     .catch(next);
 });
 
+app.delete('/products/:id', (req, res, next)=> {
+  Product.findById(req.params.id)
+    .then( product => {
+      product.isDeleted = true;
+      return product.save();
+    })
+    .then( product => res.send(product))
+    .catch(next);
+});
+
+app.put('/products/:id', (req, res, next)=> {
+  Product.findById(req.params.id)
+    .then( product => {
+      Object.assign(product, req.body);
+      return product.save();
+    })
+    .then( product => res.send(product))
+    .catch(next);
+});
+
 app.post('/users', (req, res, next)=> {
   User.create(req.body)
     .then( user => {

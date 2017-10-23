@@ -8,7 +8,6 @@ MapHelper.prototype.setMarkers = function(addresses){
   this.markers.forEach(function(marker){
     marker.setMap(null);
   });
-  console.log(addresses);
 
   this.markers = addresses.map(function(address){
     var location = address.geometry.location;

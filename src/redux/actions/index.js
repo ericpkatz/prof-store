@@ -49,6 +49,21 @@ export const createProduct = (product)=> {
   };
 };
 
+export const deleteProduct = ({ product })=> {
+  return (dispatch) => {
+    return axios.delete(`/api/products/${product.id}`)
+      .then(response => dispatch(fetchProducts()));
+  };
+};
+
+export const undeleteProduct = ({ product })=> {
+  product = Object.assign({}, product, { isDeleted: false });
+  return (dispatch) => {
+    return axios.put(`/api/products/${product.id}`, product)
+      .then(response => dispatch(fetchProducts()));
+  };
+};
+
 export const productsLoaded = (products)=> {
   return {
     type: 'SET_PRODUCTS',

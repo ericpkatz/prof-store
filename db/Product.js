@@ -6,6 +6,10 @@ const Product = conn.define('product', {
     type: Sequelize.STRING,
     unique: true
   },
+  isDeleted: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
   price: {
     type: Sequelize.DECIMAL,
     allowNull: false,

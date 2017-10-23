@@ -8,14 +8,11 @@ const stateMapper = ordersMapStateMapper;
 class OrdersMap extends Component{ 
   constructor(props){
     super();
-    console.log(props);
-
   }
   componentDidMount(){
     this.map = new MapHelper('map');
   }
   componentWillReceiveProps(nextProps){
-    console.log(nextProps.addresses);
     this.map.setMarkers(nextProps.addresses);
   }
   render(){

@@ -4,7 +4,7 @@ import { mappers } from '../redux';
 import ProductForm from './ProductForm';
 const { productsDispatchMapper, productsStateMapper } = mappers;
 
-const Products = ({ products, user, cart, addToCart, isLoggedIn })=> {
+const Products = ({ products, user, cart, addToCart, deleteProduct, undeleteProduct })=> {
   return (
     <div>
       <ul className='list-group'>
@@ -23,7 +23,21 @@ const Products = ({ products, user, cart, addToCart, isLoggedIn })=> {
                     </div>
                   )
                 }
-                <button className='pull-right btn btn-primary' onClick={ ()=> addToCart({ user, product, cart })}> Add to Cart</button>
+                {
+                  !product.isDeleted && (
+                    <button className='pull-right btn btn-primary' onClick={ ()=> addToCart({ user, product, cart })}> Add to Cart</button>
+                  )
+                }
+                {
+                  user.isAdmin && !product.isDeleted && (
+                    <button className='pull-right btn btn-danger' onClick={ ()=> deleteProduct({ product })}>Delete Product</button>
+                  )
+                }
+                {
+                  user.isAdmin && product.isDeleted && (
+                    <button className='pull-right btn btn-warning' onClick={ ()=> undeleteProduct({ product })}>Un-Delete Product</button>
+                  )
+                }
                 <br style={{ clear: 'both' }} />
               </li>
             )
