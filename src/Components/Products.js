@@ -1,12 +1,60 @@
-import React from 'react';
+import React, { Component} from 'react';
+import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { mappers } from '../redux';
 import ProductForm from './ProductForm';
 const { productsDispatchMapper, productsStateMapper } = mappers;
 
-const Products = ({ products, user, cart, addToCart, deleteProduct, undeleteProduct })=> {
+class Products extends Component{
+  constructor(){
+    super();
+    this.state = { deletingProduct: {} };
+    this._deleteProduct = this._deleteProduct.bind(this);
+  }
+  _deleteProduct(product){
+    if(product.id && this.state.deletingProduct.id){
+      this.props.deleteProduct({ product: this.state.deletingProduct });
+      this.setState({ deletingProduct: {}});
+    }
+    else{
+      this.setState({ deletingProduct: product })
+    }
+
+  }
+  render(){
+    const {_deleteProduct} = this;
+    return (
+      <_Products { ...this.props } {...this.state } _deleteProduct={ _deleteProduct} />
+    );
+
+  }
+}
+
+const _Products = ({ products, user, cart, addToCart, _deleteProduct, undeleteProduct, deletingProduct })=> {
+  const modalInstance = (
+  <div className="static-modal">
+    <Modal.Dialog>
+      <Modal.Header>
+        <Modal.Title>This is a great item</Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
+        Are you sure?
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button onClick={()=> _deleteProduct({})}>Close</Button>
+        <Button bsStyle="primary" onClick={ ()=> _deleteProduct( deletingProduct )}>Yes</Button>
+      </Modal.Footer>
+
+    </Modal.Dialog>
+  </div>
+);
   return (
     <div>
+      {
+        !!deletingProduct.id && modalInstance 
+      }
       <ul className='list-group'>
         {
           products.map( product => {
@@ -30,7 +78,7 @@ const Products = ({ products, user, cart, addToCart, deleteProduct, undeleteProd
                 }
                 {
                   user.isAdmin && !product.isDeleted && (
-                    <button className='pull-right btn btn-danger' onClick={ ()=> deleteProduct({ product })}>Delete Product</button>
+                    <button className='pull-right btn btn-danger' onClick={ ()=> _deleteProduct(product)}>Delete Product</button>
                   )
                 }
                 {

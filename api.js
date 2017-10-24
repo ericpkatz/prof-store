@@ -6,7 +6,9 @@ const models = require('./db').models;
 const { User, Product, Order, LineItem}  =  models;
 
 app.get('/products', (req, res, next)=> {
-  Product.findAll()
+  Product.findAll({
+    order: ['id']
+  })
     .then( products => res.send(products))
     .catch(next);
 });

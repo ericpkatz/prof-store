@@ -1,7 +1,7 @@
 function MapHelper(id){
   this.id = id;
-  this.init();
   this.markers = [];
+  this.init();
 }
 
 MapHelper.prototype.setMarkers = function(addresses){
@@ -17,6 +17,7 @@ MapHelper.prototype.setMarkers = function(addresses){
         title: address.formatted_address
     });
   });
+  this.setDefaultMarker();
 
   var that = this;
   var bounds = new google.maps.LatLngBounds();
@@ -30,6 +31,17 @@ MapHelper.prototype.setMarkers = function(addresses){
   }
 };
 
+MapHelper.prototype.setDefaultMarker = function(){
+  var myLatlng = new google.maps.LatLng(40.705189,-74.009209);
+  var marker = new google.maps.Marker({
+      position: myLatlng,
+      title:"Hello World!"
+  });
+  // Add the marker to the map by calling setMap()
+  marker.setMap(this.map);
+  this.markers.push(marker);
+}
+
 MapHelper.prototype.init = function(){
   var myLatlng = new google.maps.LatLng(40.705189,-74.009209);
   // set the map options hash
@@ -42,13 +54,7 @@ MapHelper.prototype.init = function(){
   var map_canvas_obj = document.getElementById(this.id);
   // initialize a new Google Map with the options
   this.map = new google.maps.Map(map_canvas_obj, mapOptions);
-  // Add the marker to the map
-  var marker = new google.maps.Marker({
-      position: myLatlng,
-      title:"Hello World!"
-  });
-  // Add the marker to the map by calling setMap()
-  marker.setMap(this.map);
+  this.setDefaultMarker();
 }
 
 export default MapHelper;

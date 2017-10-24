@@ -1,13 +1,58 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { actions } from '../redux';
 import { mappers } from '../redux';
 const { createOrder, deleteFromCart } = actions;
 const { cartStateMapper, cartDispatchMapper } = mappers;
 
-const Cart = ({ cart, user, createOrder, deleteFromCart })=> {
+class Cart extends Component {
+  constructor(){
+    super();
+    this.state = { deleting : {} };
+    this.deleteLineItem = this.deleteLineItem.bind(this);
+  }
+  deleteLineItem(lineItem){
+    this.setState({ deleting: lineItem });
+  }
+  render(){
+    const { deleting } = this.state;
+    const { deleteLineItem } = this;
+    return (
+      <_Cart {...this.props } deleting={ deleting } deleteLineItem={ deleteLineItem }/>
+    )
+  }
+}
+
+const _Cart = ({ cart, user, createOrder, deleteFromCart, deleting, deleteLineItem })=> {
+  const modalInstance = (
+  <div className="static-modal">
+    <Modal.Dialog>
+      <Modal.Header>
+        <Modal.Title>This is a great item</Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
+        Are you sure?
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button onClick={()=> deleteLineItem({})}>Close</Button>
+        <Button bsStyle="primary" onClick={ ()=> {
+            deleteFromCart({ cart, user, lineItem: deleting });
+            deleteLineItem({});
+          }
+        }>Yes</Button>
+      </Modal.Footer>
+
+    </Modal.Dialog>
+  </div>
+);
   return (
     <div>
+      {
+        deleting.productId && modalInstance 
+      }
       <ul className='list-group'>
         {
           cart.lineItems.map( (lineItem, idx) => {
@@ -25,7 +70,7 @@ const Cart = ({ cart, user, createOrder, deleteFromCart })=> {
                 Quantity: 
                 { lineItem.quantity }
                 { ' ' }
-                <button className='btn btn-danger pull-right' onClick={ ()=> deleteFromCart({ cart, user, lineItem }) }>Delete From Cart</button>
+                <button className='btn btn-warning pull-right' onClick={ ()=> deleteLineItem( lineItem ) }>Delete From Cart</button>
                 <br style={ { clear: 'both' }} />
               </li>
             )
@@ -33,13 +78,13 @@ const Cart = ({ cart, user, createOrder, deleteFromCart })=> {
         }
       </ul>
       {
-        (cart.lineItems.length && !!user.id) ? (
+        !!cart.lineItems.length && (
           <div>
-            <br />
-          <button className='pull-right btn btn-primary' onClick={ ()=> createOrder({ cart, user })}> Create Order</button>
+          <button disabled={ !user.id } className='pull-right btn btn-primary' onClick={ ()=> createOrder({ cart, user })}> Create Order</button>
             <br style={ { clear: 'both' }} />
-            </div>
-        ): (null)
+          </div>
+
+        )
       }
       </div>
   );
