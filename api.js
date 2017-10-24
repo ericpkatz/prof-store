@@ -29,6 +29,7 @@ app.delete('/products/:id', (req, res, next)=> {
     .catch(next);
 });
 
+
 app.put('/products/:id', (req, res, next)=> {
   Product.findById(req.params.id)
     .then( product => {
