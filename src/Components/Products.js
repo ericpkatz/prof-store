@@ -1,59 +1,42 @@
 import React, { Component} from 'react';
-import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { mappers } from '../redux';
 import ProductForm from './ProductForm';
 const { productsDispatchMapper, productsStateMapper } = mappers;
+import Modal from '../common/Modal';
 
 class Products extends Component{
   constructor(){
     super();
     this.state = { deletingProduct: {} };
-    this._deleteProduct = this._deleteProduct.bind(this);
+    this.confirmModal = this.confirmModal.bind(this);
+    this.showModal = this.showModal.bind(this);
+    this.cancelModal = this.cancelModal.bind(this);
   }
-  _deleteProduct(product){
-    if(product.id && this.state.deletingProduct.id){
+  confirmModal(){
       this.props.deleteProduct({ product: this.state.deletingProduct });
       this.setState({ deletingProduct: {}});
-    }
-    else{
-      this.setState({ deletingProduct: product })
-    }
-
+  }
+  showModal(product){
+    this.setState({ deletingProduct: product });
+  }
+  cancelModal(){
+    this.setState({ deletingProduct: {} });
   }
   render(){
-    const {_deleteProduct} = this;
+    const { confirmModal, cancelModal, showModal } = this;
     return (
-      <_Products { ...this.props } {...this.state } _deleteProduct={ _deleteProduct} />
+      <_Products { ...this.props } {...this.state } confirmModal={ confirmModal } cancelModal={ cancelModal } showModal= { showModal } />
     );
 
   }
 }
 
-const _Products = ({ products, user, cart, addToCart, _deleteProduct, undeleteProduct, deletingProduct })=> {
-  const modalInstance = (
-  <div className="static-modal">
-    <Modal.Dialog>
-      <Modal.Header>
-        <Modal.Title>This is a great item</Modal.Title>
-      </Modal.Header>
-
-      <Modal.Body>
-        Are you sure?
-      </Modal.Body>
-
-      <Modal.Footer>
-        <Button onClick={()=> _deleteProduct({})}>Close</Button>
-        <Button bsStyle="primary" onClick={ ()=> _deleteProduct( deletingProduct )}>Yes</Button>
-      </Modal.Footer>
-
-    </Modal.Dialog>
-  </div>
-);
+const _Products = ({ products, user, cart, addToCart, showModal, confirmModal, cancelModal, undeleteProduct, deletingProduct })=> {
   return (
     <div>
       {
-        !!deletingProduct.id && modalInstance 
+        !!deletingProduct.id && <Modal onConfirm={ confirmModal } onCancel={ cancelModal }/> 
       }
       <ul className='list-group'>
         {
@@ -78,7 +61,7 @@ const _Products = ({ products, user, cart, addToCart, _deleteProduct, undeletePr
                 }
                 {
                   user.isAdmin && !product.isDeleted && (
-                    <button className='pull-right btn btn-danger' onClick={ ()=> _deleteProduct(product)}>Delete Product</button>
+                    <button className='pull-right btn btn-danger' onClick={ ()=> showModal(product)}>Delete Product</button>
                   )
                 }
                 {

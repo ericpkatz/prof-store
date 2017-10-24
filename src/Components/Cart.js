@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import Modal from '../common/Modal';
 import { connect } from 'react-redux';
 import { actions } from '../redux';
 import { mappers } from '../redux';
@@ -9,49 +9,35 @@ const { cartStateMapper, cartDispatchMapper } = mappers;
 class Cart extends Component {
   constructor(){
     super();
-    this.state = { deleting : {} };
-    this.deleteLineItem = this.deleteLineItem.bind(this);
+    this.state = { deletingLineItem : {} };
+    this.confirmModal = this.confirmModal.bind(this);
+    this.showModal = this.showModal.bind(this);
+    this.cancelModal = this.cancelModal.bind(this);
   }
-  deleteLineItem(lineItem){
-    this.setState({ deleting: lineItem });
+  confirmModal(){
+      this.props.deleteFromCart({ cart: this.props.cart, lineItem: this.state.deletingLineItem, user: this.props.user });
+      this.setState({ deletingLineItem: {}});
+  }
+  showModal(product){
+    this.setState({ deletingLineItem: product });
+  }
+  cancelModal(){
+    this.setState({ deletingLineItem: {} });
   }
   render(){
-    const { deleting } = this.state;
-    const { deleteLineItem } = this;
+    const { deletingLineItem } = this.state;
+    const { confirmModal, cancelModal, showModal } = this;
     return (
-      <_Cart {...this.props } deleting={ deleting } deleteLineItem={ deleteLineItem }/>
+      <_Cart {...this.props } confirmModal={ confirmModal } showModal={ showModal } cancelModal={ cancelModal } deletingLineItem={ deletingLineItem }/>
     )
   }
 }
 
-const _Cart = ({ cart, user, createOrder, deleteFromCart, deleting, deleteLineItem })=> {
-  const modalInstance = (
-  <div className="static-modal">
-    <Modal.Dialog>
-      <Modal.Header>
-        <Modal.Title>This is a great item</Modal.Title>
-      </Modal.Header>
-
-      <Modal.Body>
-        Are you sure?
-      </Modal.Body>
-
-      <Modal.Footer>
-        <Button onClick={()=> deleteLineItem({})}>Close</Button>
-        <Button bsStyle="primary" onClick={ ()=> {
-            deleteFromCart({ cart, user, lineItem: deleting });
-            deleteLineItem({});
-          }
-        }>Yes</Button>
-      </Modal.Footer>
-
-    </Modal.Dialog>
-  </div>
-);
+const _Cart = ({ cart, user, createOrder, deleteFromCart, showModal, confirmModal, cancelModal, deletingLineItem })=> {
   return (
     <div>
       {
-        deleting.productId && modalInstance 
+        deletingLineItem.productId && <Modal onConfirm={ confirmModal } onCancel={ cancelModal } /> 
       }
       <ul className='list-group'>
         {
@@ -70,7 +56,7 @@ const _Cart = ({ cart, user, createOrder, deleteFromCart, deleting, deleteLineIt
                 Quantity: 
                 { lineItem.quantity }
                 { ' ' }
-                <button className='btn btn-warning pull-right' onClick={ ()=> deleteLineItem( lineItem ) }>Delete From Cart</button>
+                <button className='btn btn-warning pull-right' onClick={ ()=> showModal(lineItem) }>Delete From Cart</button>
                 <br style={ { clear: 'both' }} />
               </li>
             )
